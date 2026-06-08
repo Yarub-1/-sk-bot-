@@ -1,6 +1,5 @@
 import requests
 import pandas as pd
-import numpy as np
 import time
 from datetime import datetime
 
@@ -67,21 +66,42 @@ def send_telegram(message):
 
 def get_data(symbol, interval, period="5d"):
     try:
+        # نجرب أولاً API v8
         url = f"https://query1.finance.yahoo.com/v8/finance/chart/{symbol}"
-        params = {"interval": interval, "range": period, "includePrePost": "false"}
-        headers = {"User-Agent": "Mozilla/5.0"}
+        params = {
+            "interval": interval,
+            "range": period,
+            "includePrePost": "false"
+        }
+        headers = {
+            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36",
+            "Accept": "application/json",
+            "Accept-Language": "en-US,en;q=0.9",
+        }
         r = requests.get(url, params=params, headers=headers, timeout=15)
         data = r.json()
-        timestamps = data["chart"]["result"][0]["timestamp"]
-        ohlc = data["chart"]["result"][0]["indicators"]["quote"][0]
+
+        result = data.get("chart", {}).get("result", None)
+        if not result or len(result) == 0:
+            return None
+
+        timestamps = result[0].get("timestamp", None)
+        if not timestamps:
+            return None
+
+        ohlc = result[0]["indicators"]["quote"][0]
         df = pd.DataFrame({
             "time":  pd.to_datetime(timestamps, unit="s"),
-            "open":  ohlc["open"],
-            "high":  ohlc["high"],
-            "low":   ohlc["low"],
-            "close": ohlc["close"],
+            "high":  ohlc.get("high", []),
+            "low":   ohlc.get("low", []),
+            "close": ohlc.get("close", []),
         }).dropna()
+
+        if len(df) < 10:
+            return None
+
         return df
+
     except Exception as e:
         print(f"Data error {symbol} {interval}: {e}")
         return None
@@ -174,6 +194,7 @@ def check_symbol(yahoo_sym, name, interval, sensitivity):
     period = period_map.get(interval, "5d")
     df = get_data(yahoo_sym, interval, period)
     if df is None or len(df) < sensitivity * 3:
+        print(f"No data: {name} {interval}")
         return
     buy_sigs, sell_sigs = sk_indicator(df, sensitivity)
     idx = len(df) - 2
@@ -203,7 +224,7 @@ def main():
         for yahoo_sym, name, interval, sensitivity in SYMBOLS:
             try:
                 check_symbol(yahoo_sym, name, interval, sensitivity)
-                time.sleep(1)
+                time.sleep(2)
             except Exception as e:
                 print(f"Error {name} {interval}: {e}")
         print("Waiting 60 seconds...")
