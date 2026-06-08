@@ -8,11 +8,11 @@ CHAT_ID   = "1853838900"
 
 SYMBOLS = [
     # الذهب
-    ("GC=F", "XAUUSD",  "5m",  8),
-    ("GC=F", "XAUUSD",  "15m", 11),
-    ("GC=F", "XAUUSD",  "30m", 12),
-    ("GC=F", "XAUUSD",  "1h",  14),
-    ("GC=F", "XAUUSD",  "4h",  10),
+    ("GC=F",     "XAUUSD",  "5m",  8),
+    ("GC=F",     "XAUUSD",  "15m", 11),
+    ("GC=F",     "XAUUSD",  "30m", 12),
+    ("GC=F",     "XAUUSD",  "1h",  14),
+    ("GC=F",     "XAUUSD",  "4h",  10),
     # الناسداك
     ("NQ=F",     "NAS100",  "5m",  9),
     ("NQ=F",     "NAS100",  "15m", 12),
@@ -58,6 +58,12 @@ SYMBOLS = [
     ("GBPJPY=X", "GBPJPY",  "1h",  16),
     ("GBPJPY=X", "GBPJPY",  "4h",  11),
 ]
+
+# تحويل الفريم للعرض
+TIMEFRAME_LABEL = {
+    "5m": "5د", "15m": "15د", "30m": "30د",
+    "1h": "1س", "4h": "4س"
+}
 
 last_signal = {}
 
@@ -128,6 +134,8 @@ def sk_indicator(df, sensitivity):
 
     buy_signals  = [False] * len(df)
     sell_signals = [False] * len(df)
+    buy_data     = [None]  * len(df)
+    sell_data    = [None]  * len(df)
 
     for i in range(len(df)):
         pl = pl_list[i]; ph = ph_list[i]
@@ -153,7 +161,13 @@ def sk_indicator(df, sensitivity):
                     buy_wave_B = l
 
         if buy_reached and buy_wave_A is not None and c > buy_wave_A:
-            buy_signals[i] = True; buy_reached = False; buy_waiting_B = False
+            buy_signals[i] = True
+            wave_range = buy_wave_A - buy_wave_0
+            buy_data[i] = {
+                "sl": round(buy_wave_B, 5),
+                "tp": round(buy_wave_B + wave_range * 1.618, 5)
+            }
+            buy_reached = False; buy_waiting_B = False
 
         if ph is not None:
             sell_wave_0 = ph; sell_0_bar = i; sell_wave_A = None
@@ -175,34 +189,66 @@ def sk_indicator(df, sensitivity):
                     sell_wave_B = h
 
         if sell_reached and sell_wave_A is not None and c < sell_wave_A:
-            sell_signals[i] = True; sell_reached = False; sell_waiting_B = False
+            sell_signals[i] = True
+            wave_range = sell_wave_0 - sell_wave_A
+            sell_data[i] = {
+                "sl": round(sell_wave_B, 5),
+                "tp": round(sell_wave_B - wave_range * 1.618, 5)
+            }
+            sell_reached = False; sell_waiting_B = False
 
-    return buy_signals, sell_signals
+    return buy_signals, sell_signals, buy_data, sell_data
 
 def check_symbol(symbol, name, interval, sensitivity):
     df = get_data(symbol, interval)
     if df is None or len(df) < sensitivity * 3:
         print(f"No data: {name} {interval}")
         return
-    buy_sigs, sell_sigs = sk_indicator(df, sensitivity)
+    buy_sigs, sell_sigs, buy_data, sell_data = sk_indicator(df, sensitivity)
     idx = len(df) - 2
     if idx < 0:
         return
+
     key      = f"{name}_{interval}"
-    cur_time = str(df["time"].iloc[idx])
+    cur_time = df["time"].iloc[idx].strftime("%d-%m-%Y %H:%M")
     price    = round(df["close"].iloc[idx], 5)
-    if buy_sigs[idx]:
+    tf_label = TIMEFRAME_LABEL.get(interval, interval)
+
+    if buy_sigs[idx] and buy_data[idx]:
         sig_key = f"{key}_BUY_{cur_time}"
         if last_signal.get(key) != sig_key:
             last_signal[key] = sig_key
-            send_telegram(f"🟢 <b>شراء | {name}</b>\n⏱ الفريم: {interval}\n💰 السعر: {price}\n🕐 الوقت: {cur_time}\n📊 مؤشر SK Fibonacci")
-            print(f"BUY: {name} {interval} @ {price}")
-    if sell_sigs[idx]:
+            tp = buy_data[idx]["tp"]
+            sl = buy_data[idx]["sl"]
+            msg = (
+                f"🟢 <b>SK Buy</b>\n\n"
+                f"{name}\n"
+                f"⏱ {tf_label} , {sensitivity}\n"
+                f"Price: {price}\n"
+                f"Tp: {tp}\n"
+                f"Sl: {sl}\n"
+                f"🕐 {cur_time}"
+            )
+            send_telegram(msg)
+            print(f"BUY: {name} {interval} @ {price} TP:{tp} SL:{sl}")
+
+    if sell_sigs[idx] and sell_data[idx]:
         sig_key = f"{key}_SELL_{cur_time}"
         if last_signal.get(key) != sig_key:
             last_signal[key] = sig_key
-            send_telegram(f"🔴 <b>بيع | {name}</b>\n⏱ الفريم: {interval}\n💰 السعر: {price}\n🕐 الوقت: {cur_time}\n📊 مؤشر SK Fibonacci")
-            print(f"SELL: {name} {interval} @ {price}")
+            tp = sell_data[idx]["tp"]
+            sl = sell_data[idx]["sl"]
+            msg = (
+                f"🔴 <b>SK Sell</b>\n\n"
+                f"{name}\n"
+                f"⏱ {tf_label} , {sensitivity}\n"
+                f"Price: {price}\n"
+                f"Tp: {tp}\n"
+                f"Sl: {sl}\n"
+                f"🕐 {cur_time}"
+            )
+            send_telegram(msg)
+            print(f"SELL: {name} {interval} @ {price} TP:{tp} SL:{sl}")
 
 def main():
     send_telegram("🤖 <b>SK Trading Bot</b> يعمل الآن ✅\nيراقب جميع الرموز والفريمات...")
