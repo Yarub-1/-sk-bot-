@@ -8,11 +8,11 @@ CHAT_ID   = "1853838900"
 
 SYMBOLS = [
     # الذهب
-    ("XAUUSD=X", "XAUUSD",  "5m",  8),
-    ("XAUUSD=X", "XAUUSD",  "15m", 11),
-    ("XAUUSD=X", "XAUUSD",  "30m", 12),
-    ("XAUUSD=X", "XAUUSD",  "1h",  14),
-    ("XAUUSD=X", "XAUUSD",  "4h",  10),
+    ("GC=F", "XAUUSD",  "5m",  8),
+    ("GC=F", "XAUUSD",  "15m", 11),
+    ("GC=F", "XAUUSD",  "30m", 12),
+    ("GC=F", "XAUUSD",  "1h",  14),
+    ("GC=F", "XAUUSD",  "4h",  10),
     # الناسداك
     ("NQ=F",     "NAS100",  "5m",  9),
     ("NQ=F",     "NAS100",  "15m", 12),
