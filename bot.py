@@ -7,56 +7,63 @@ BOT_TOKEN    = "8791976068:AAG9M46lLkox7o5O2qzOVPRz0H0go01ZYeM"
 CHAT_ID      = "1853838900"
 TWELVE_KEY   = "04141b201ee547f8b2ba600cbcc287b5"
 
-# ════════════════════════════════════════════════
-# الرموز — (رمز Yahoo, رمز TwelveData, الاسم, الفريم, الحساسية, المصدر)
-# المصدر: "twelve" أو "yahoo"
-# ════════════════════════════════════════════════
+# المصدر: "twelve" للذهب والفوركس والبيتكوين، "yahoo" للباقي
 SYMBOLS = [
-    ("XAU/USD",  "XAUUSD",   "5min",  8,  "twelve"),
-    ("XAU/USD",  "XAUUSD",   "15min", 11, "twelve"),
-    ("XAU/USD",  "XAUUSD",   "30min", 12, "twelve"),
-    ("XAU/USD",  "XAUUSD",   "1h",    14, "twelve"),
-    ("XAU/USD",  "XAUUSD",   "4h",    10, "twelve"),
-    ("NQ1!",     "NAS100",   "5min",  9,  "yahoo"),
-    ("NQ=F",     "NAS100",   "15min", 12, "yahoo"),
-    ("NQ=F",     "NAS100",   "30min", 14, "yahoo"),
-    ("NQ=F",     "NAS100",   "1h",    15, "yahoo"),
-    ("XAG/USD",  "XAGUSD",   "5min",  11, "twelve"),
-    ("XAG/USD",  "XAGUSD",   "15min", 14, "twelve"),
-    ("XAG/USD",  "XAGUSD",   "30min", 16, "twelve"),
-    ("XAG/USD",  "XAGUSD",   "1h",    18, "twelve"),
-    ("ES=F",     "US500",    "5min",  8,  "yahoo"),
-    ("ES=F",     "US500",    "15min", 11, "yahoo"),
-    ("ES=F",     "US500",    "30min", 13, "yahoo"),
-    ("ES=F",     "US500",    "1h",    14, "yahoo"),
-    ("KC=F",     "COFFEE",   "5min",  12, "yahoo"),
-    ("KC=F",     "COFFEE",   "15min", 15, "yahoo"),
-    ("KC=F",     "COFFEE",   "30min", 18, "yahoo"),
-    ("KC=F",     "COFFEE",   "1h",    20, "yahoo"),
-    ("GBP/USD",  "GBPUSD",   "5min",  8,  "twelve"),
-    ("GBP/USD",  "GBPUSD",   "15min", 10, "twelve"),
-    ("GBP/USD",  "GBPUSD",   "30min", 11, "twelve"),
-    ("GBP/USD",  "GBPUSD",   "1h",    14, "twelve"),
-    ("GBP/USD",  "GBPUSD",   "4h",    10, "twelve"),
-    ("CL=F",     "USOIL",    "5min",  9,  "yahoo"),
-    ("CL=F",     "USOIL",    "15min", 12, "yahoo"),
-    ("CL=F",     "USOIL",    "30min", 13, "yahoo"),
-    ("CL=F",     "USOIL",    "1h",    16, "yahoo"),
-    ("BTC/USD",  "BTCUSDT",  "5min",  9,  "twelve"),
-    ("BTC/USD",  "BTCUSDT",  "15min", 12, "twelve"),
-    ("BTC/USD",  "BTCUSDT",  "30min", 14, "twelve"),
-    ("BTC/USD",  "BTCUSDT",  "1h",    16, "twelve"),
-    ("BTC/USD",  "BTCUSDT",  "4h",    11, "twelve"),
-    ("EUR/USD",  "EURUSD",   "5min",  9,  "twelve"),
-    ("EUR/USD",  "EURUSD",   "15min", 12, "twelve"),
-    ("EUR/USD",  "EURUSD",   "30min", 13, "twelve"),
-    ("EUR/USD",  "EURUSD",   "1h",    15, "twelve"),
-    ("EUR/USD",  "EURUSD",   "4h",    10, "twelve"),
-    ("GBP/JPY",  "GBPJPY",   "5min",  10, "twelve"),
-    ("GBP/JPY",  "GBPJPY",   "15min", 12, "twelve"),
-    ("GBP/JPY",  "GBPJPY",   "30min", 14, "twelve"),
-    ("GBP/JPY",  "GBPJPY",   "1h",    16, "twelve"),
-    ("GBP/JPY",  "GBPJPY",   "4h",    11, "twelve"),
+    # الذهب - Twelve Data
+    ("XAU/USD",  "XAUUSD",  "5min",  8,  "twelve"),
+    ("XAU/USD",  "XAUUSD",  "15min", 11, "twelve"),
+    ("XAU/USD",  "XAUUSD",  "30min", 12, "twelve"),
+    ("XAU/USD",  "XAUUSD",  "1h",    14, "twelve"),
+    ("XAU/USD",  "XAUUSD",  "4h",    10, "twelve"),
+    # الناسداك - Yahoo
+    ("NQ=F",     "NAS100",  "5min",  9,  "yahoo"),
+    ("NQ=F",     "NAS100",  "15min", 12, "yahoo"),
+    ("NQ=F",     "NAS100",  "30min", 14, "yahoo"),
+    ("NQ=F",     "NAS100",  "1h",    15, "yahoo"),
+    # الفضة - Yahoo
+    ("XAGUSD=X", "XAGUSD",  "5min",  11, "yahoo"),
+    ("XAGUSD=X", "XAGUSD",  "15min", 14, "yahoo"),
+    ("XAGUSD=X", "XAGUSD",  "30min", 16, "yahoo"),
+    ("XAGUSD=X", "XAGUSD",  "1h",    18, "yahoo"),
+    # US500 - Yahoo
+    ("ES=F",     "US500",   "5min",  8,  "yahoo"),
+    ("ES=F",     "US500",   "15min", 11, "yahoo"),
+    ("ES=F",     "US500",   "30min", 13, "yahoo"),
+    ("ES=F",     "US500",   "1h",    14, "yahoo"),
+    # القهوة - Yahoo
+    ("KC=F",     "COFFEE",  "5min",  12, "yahoo"),
+    ("KC=F",     "COFFEE",  "15min", 15, "yahoo"),
+    ("KC=F",     "COFFEE",  "30min", 18, "yahoo"),
+    ("KC=F",     "COFFEE",  "1h",    20, "yahoo"),
+    # GBPUSD - Twelve Data
+    ("GBP/USD",  "GBPUSD",  "5min",  8,  "twelve"),
+    ("GBP/USD",  "GBPUSD",  "15min", 10, "twelve"),
+    ("GBP/USD",  "GBPUSD",  "30min", 11, "twelve"),
+    ("GBP/USD",  "GBPUSD",  "1h",    14, "twelve"),
+    ("GBP/USD",  "GBPUSD",  "4h",    10, "twelve"),
+    # النفط - Yahoo
+    ("CL=F",     "USOIL",   "5min",  9,  "yahoo"),
+    ("CL=F",     "USOIL",   "15min", 12, "yahoo"),
+    ("CL=F",     "USOIL",   "30min", 13, "yahoo"),
+    ("CL=F",     "USOIL",   "1h",    16, "yahoo"),
+    # البيتكوين - Twelve Data
+    ("BTC/USD",  "BTCUSDT", "5min",  9,  "twelve"),
+    ("BTC/USD",  "BTCUSDT", "15min", 12, "twelve"),
+    ("BTC/USD",  "BTCUSDT", "30min", 14, "twelve"),
+    ("BTC/USD",  "BTCUSDT", "1h",    16, "twelve"),
+    ("BTC/USD",  "BTCUSDT", "4h",    11, "twelve"),
+    # EURUSD - Twelve Data
+    ("EUR/USD",  "EURUSD",  "5min",  9,  "twelve"),
+    ("EUR/USD",  "EURUSD",  "15min", 12, "twelve"),
+    ("EUR/USD",  "EURUSD",  "30min", 13, "twelve"),
+    ("EUR/USD",  "EURUSD",  "1h",    15, "twelve"),
+    ("EUR/USD",  "EURUSD",  "4h",    10, "twelve"),
+    # GBPJPY - Twelve Data
+    ("GBP/JPY",  "GBPJPY",  "5min",  10, "twelve"),
+    ("GBP/JPY",  "GBPJPY",  "15min", 12, "twelve"),
+    ("GBP/JPY",  "GBPJPY",  "30min", 14, "twelve"),
+    ("GBP/JPY",  "GBPJPY",  "1h",    16, "twelve"),
+    ("GBP/JPY",  "GBPJPY",  "4h",    11, "twelve"),
 ]
 
 last_signal = {}
@@ -69,9 +76,6 @@ def send_telegram(message):
     except Exception as e:
         print(f"Telegram error: {e}")
 
-# ════════════════════════════════════════════════
-# جلب البيانات من Twelve Data
-# ════════════════════════════════════════════════
 def get_data_twelve(symbol, interval):
     try:
         url = "https://api.twelvedata.com/time_series"
@@ -90,7 +94,7 @@ def get_data_twelve(symbol, interval):
         if not values:
             return None
         df = pd.DataFrame(values)
-        df = df.rename(columns={"datetime": "time", "high": "high", "low": "low", "close": "close"})
+        df = df.rename(columns={"datetime": "time"})
         df["time"]  = pd.to_datetime(df["time"])
         df["high"]  = df["high"].astype(float)
         df["low"]   = df["low"].astype(float)
@@ -98,24 +102,21 @@ def get_data_twelve(symbol, interval):
         df = df.sort_values("time").reset_index(drop=True)
         return df
     except Exception as e:
-        print(f"Twelve Data error {symbol} {interval}: {e}")
+        print(f"Twelve error {symbol} {interval}: {e}")
         return None
 
-# ════════════════════════════════════════════════
-# جلب البيانات من Yahoo Finance
-# ════════════════════════════════════════════════
 def get_data_yahoo(symbol, interval):
     try:
         interval_map = {"5min":"5m","15min":"15m","30min":"30m","1h":"60m","4h":"1h"}
         period_map   = {"5min":"1d","15min":"5d","30min":"5d","1h":"10d","4h":"60d"}
         yf_interval  = interval_map.get(interval, "5m")
         period       = period_map.get(interval, "5d")
-        url = f"https://query1.finance.yahoo.com/v8/finance/chart/{symbol}"
+        url     = f"https://query1.finance.yahoo.com/v8/finance/chart/{symbol}"
         params  = {"interval": yf_interval, "range": period, "includePrePost": "false"}
         headers = {"User-Agent": "Mozilla/5.0"}
-        r    = requests.get(url, params=params, headers=headers, timeout=15)
-        data = r.json()
-        result = data.get("chart", {}).get("result", None)
+        r       = requests.get(url, params=params, headers=headers, timeout=15)
+        data    = r.json()
+        result  = data.get("chart", {}).get("result", None)
         if not result:
             return None
         timestamps = result[0].get("timestamp", None)
@@ -133,9 +134,6 @@ def get_data_yahoo(symbol, interval):
         print(f"Yahoo error {symbol} {interval}: {e}")
         return None
 
-# ════════════════════════════════════════════════
-# مؤشر SK
-# ════════════════════════════════════════════════
 def pivot_high(high, left, right):
     result = [None] * len(high)
     for i in range(left, len(high) - right):
@@ -220,31 +218,23 @@ def sk_indicator(df, sensitivity):
     return buy_signals, sell_signals
 
 def check_symbol(symbol, name, interval, sensitivity, source):
-    if source == "twelve":
-        df = get_data_twelve(symbol, interval)
-    else:
-        df = get_data_yahoo(symbol, interval)
-
+    df = get_data_twelve(symbol, interval) if source == "twelve" else get_data_yahoo(symbol, interval)
     if df is None or len(df) < sensitivity * 3:
         print(f"No data: {name} {interval}")
         return
-
     buy_sigs, sell_sigs = sk_indicator(df, sensitivity)
     idx = len(df) - 2
     if idx < 0:
         return
-
     key      = f"{name}_{interval}"
     cur_time = str(df["time"].iloc[idx])
     price    = round(df["close"].iloc[idx], 5)
-
     if buy_sigs[idx]:
         sig_key = f"{key}_BUY_{cur_time}"
         if last_signal.get(key) != sig_key:
             last_signal[key] = sig_key
             send_telegram(f"🟢 <b>شراء | {name}</b>\n⏱ الفريم: {interval}\n💰 السعر: {price}\n🕐 الوقت: {cur_time}\n📊 مؤشر SK Fibonacci")
             print(f"BUY: {name} {interval} @ {price}")
-
     if sell_sigs[idx]:
         sig_key = f"{key}_SELL_{cur_time}"
         if last_signal.get(key) != sig_key:
