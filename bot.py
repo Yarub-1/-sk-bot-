@@ -3,55 +3,60 @@ import pandas as pd
 import time
 from datetime import datetime
 
-BOT_TOKEN = "8791976068:AAG9M46lLkox7o5O2qzOVPRz0H0go01ZYeM"
-CHAT_ID   = "1853838900"
+BOT_TOKEN    = "8791976068:AAG9M46lLkox7o5O2qzOVPRz0H0go01ZYeM"
+CHAT_ID      = "1853838900"
+TWELVE_KEY   = "04141b201ee547f8b2ba600cbcc287b5"
 
+# ════════════════════════════════════════════════
+# الرموز — (رمز Yahoo, رمز TwelveData, الاسم, الفريم, الحساسية, المصدر)
+# المصدر: "twelve" أو "yahoo"
+# ════════════════════════════════════════════════
 SYMBOLS = [
-    ("XAUUSD=X",  "XAUUSD",   "5m",  8),
-    ("XAUUSD=X",  "XAUUSD",   "15m", 11),
-    ("XAUUSD=X",  "XAUUSD",   "30m", 12),
-    ("XAUUSD=X",  "XAUUSD",   "1h",  14),
-    ("XAUUSD=X",  "XAUUSD",   "4h",  10),
-    ("NQ=F",      "NAS100",   "5m",  9),
-    ("NQ=F",      "NAS100",   "15m", 12),
-    ("NQ=F",      "NAS100",   "30m", 14),
-    ("NQ=F",      "NAS100",   "1h",  15),
-    ("XAGUSD=X",  "XAGUSD",   "5m",  11),
-    ("XAGUSD=X",  "XAGUSD",   "15m", 14),
-    ("XAGUSD=X",  "XAGUSD",   "30m", 16),
-    ("XAGUSD=X",  "XAGUSD",   "1h",  18),
-    ("ES=F",      "US500",    "5m",  8),
-    ("ES=F",      "US500",    "15m", 11),
-    ("ES=F",      "US500",    "30m", 13),
-    ("ES=F",      "US500",    "1h",  14),
-    ("KC=F",      "COFFEE",   "5m",  12),
-    ("KC=F",      "COFFEE",   "15m", 15),
-    ("KC=F",      "COFFEE",   "30m", 18),
-    ("KC=F",      "COFFEE",   "1h",  20),
-    ("GBPUSD=X",  "GBPUSD",   "5m",  8),
-    ("GBPUSD=X",  "GBPUSD",   "15m", 10),
-    ("GBPUSD=X",  "GBPUSD",   "30m", 11),
-    ("GBPUSD=X",  "GBPUSD",   "1h",  14),
-    ("GBPUSD=X",  "GBPUSD",   "4h",  10),
-    ("CL=F",      "USOIL",    "5m",  9),
-    ("CL=F",      "USOIL",    "15m", 12),
-    ("CL=F",      "USOIL",    "30m", 13),
-    ("CL=F",      "USOIL",    "1h",  16),
-    ("BTC-USD",   "BTCUSDT",  "5m",  9),
-    ("BTC-USD",   "BTCUSDT",  "15m", 12),
-    ("BTC-USD",   "BTCUSDT",  "30m", 14),
-    ("BTC-USD",   "BTCUSDT",  "1h",  16),
-    ("BTC-USD",   "BTCUSDT",  "4h",  11),
-    ("EURUSD=X",  "EURUSD",   "5m",  9),
-    ("EURUSD=X",  "EURUSD",   "15m", 12),
-    ("EURUSD=X",  "EURUSD",   "30m", 13),
-    ("EURUSD=X",  "EURUSD",   "1h",  15),
-    ("EURUSD=X",  "EURUSD",   "4h",  10),
-    ("GBPJPY=X",  "GBPJPY",   "5m",  10),
-    ("GBPJPY=X",  "GBPJPY",   "15m", 12),
-    ("GBPJPY=X",  "GBPJPY",   "30m", 14),
-    ("GBPJPY=X",  "GBPJPY",   "1h",  16),
-    ("GBPJPY=X",  "GBPJPY",   "4h",  11),
+    ("XAU/USD",  "XAUUSD",   "5min",  8,  "twelve"),
+    ("XAU/USD",  "XAUUSD",   "15min", 11, "twelve"),
+    ("XAU/USD",  "XAUUSD",   "30min", 12, "twelve"),
+    ("XAU/USD",  "XAUUSD",   "1h",    14, "twelve"),
+    ("XAU/USD",  "XAUUSD",   "4h",    10, "twelve"),
+    ("NQ1!",     "NAS100",   "5min",  9,  "yahoo"),
+    ("NQ=F",     "NAS100",   "15min", 12, "yahoo"),
+    ("NQ=F",     "NAS100",   "30min", 14, "yahoo"),
+    ("NQ=F",     "NAS100",   "1h",    15, "yahoo"),
+    ("XAG/USD",  "XAGUSD",   "5min",  11, "twelve"),
+    ("XAG/USD",  "XAGUSD",   "15min", 14, "twelve"),
+    ("XAG/USD",  "XAGUSD",   "30min", 16, "twelve"),
+    ("XAG/USD",  "XAGUSD",   "1h",    18, "twelve"),
+    ("ES=F",     "US500",    "5min",  8,  "yahoo"),
+    ("ES=F",     "US500",    "15min", 11, "yahoo"),
+    ("ES=F",     "US500",    "30min", 13, "yahoo"),
+    ("ES=F",     "US500",    "1h",    14, "yahoo"),
+    ("KC=F",     "COFFEE",   "5min",  12, "yahoo"),
+    ("KC=F",     "COFFEE",   "15min", 15, "yahoo"),
+    ("KC=F",     "COFFEE",   "30min", 18, "yahoo"),
+    ("KC=F",     "COFFEE",   "1h",    20, "yahoo"),
+    ("GBP/USD",  "GBPUSD",   "5min",  8,  "twelve"),
+    ("GBP/USD",  "GBPUSD",   "15min", 10, "twelve"),
+    ("GBP/USD",  "GBPUSD",   "30min", 11, "twelve"),
+    ("GBP/USD",  "GBPUSD",   "1h",    14, "twelve"),
+    ("GBP/USD",  "GBPUSD",   "4h",    10, "twelve"),
+    ("CL=F",     "USOIL",    "5min",  9,  "yahoo"),
+    ("CL=F",     "USOIL",    "15min", 12, "yahoo"),
+    ("CL=F",     "USOIL",    "30min", 13, "yahoo"),
+    ("CL=F",     "USOIL",    "1h",    16, "yahoo"),
+    ("BTC/USD",  "BTCUSDT",  "5min",  9,  "twelve"),
+    ("BTC/USD",  "BTCUSDT",  "15min", 12, "twelve"),
+    ("BTC/USD",  "BTCUSDT",  "30min", 14, "twelve"),
+    ("BTC/USD",  "BTCUSDT",  "1h",    16, "twelve"),
+    ("BTC/USD",  "BTCUSDT",  "4h",    11, "twelve"),
+    ("EUR/USD",  "EURUSD",   "5min",  9,  "twelve"),
+    ("EUR/USD",  "EURUSD",   "15min", 12, "twelve"),
+    ("EUR/USD",  "EURUSD",   "30min", 13, "twelve"),
+    ("EUR/USD",  "EURUSD",   "1h",    15, "twelve"),
+    ("EUR/USD",  "EURUSD",   "4h",    10, "twelve"),
+    ("GBP/JPY",  "GBPJPY",   "5min",  10, "twelve"),
+    ("GBP/JPY",  "GBPJPY",   "15min", 12, "twelve"),
+    ("GBP/JPY",  "GBPJPY",   "30min", 14, "twelve"),
+    ("GBP/JPY",  "GBPJPY",   "1h",    16, "twelve"),
+    ("GBP/JPY",  "GBPJPY",   "4h",    11, "twelve"),
 ]
 
 last_signal = {}
@@ -64,31 +69,58 @@ def send_telegram(message):
     except Exception as e:
         print(f"Telegram error: {e}")
 
-def get_data(symbol, interval, period="5d"):
+# ════════════════════════════════════════════════
+# جلب البيانات من Twelve Data
+# ════════════════════════════════════════════════
+def get_data_twelve(symbol, interval):
     try:
-        # نجرب أولاً API v8
-        url = f"https://query1.finance.yahoo.com/v8/finance/chart/{symbol}"
+        url = "https://api.twelvedata.com/time_series"
         params = {
-            "interval": interval,
-            "range": period,
-            "includePrePost": "false"
+            "symbol":     symbol,
+            "interval":   interval,
+            "outputsize": 200,
+            "apikey":     TWELVE_KEY,
         }
-        headers = {
-            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36",
-            "Accept": "application/json",
-            "Accept-Language": "en-US,en;q=0.9",
-        }
-        r = requests.get(url, params=params, headers=headers, timeout=15)
+        r    = requests.get(url, params=params, timeout=15)
         data = r.json()
-
-        result = data.get("chart", {}).get("result", None)
-        if not result or len(result) == 0:
+        if data.get("status") == "error":
+            print(f"Twelve error {symbol}: {data.get('message')}")
             return None
+        values = data.get("values", [])
+        if not values:
+            return None
+        df = pd.DataFrame(values)
+        df = df.rename(columns={"datetime": "time", "high": "high", "low": "low", "close": "close"})
+        df["time"]  = pd.to_datetime(df["time"])
+        df["high"]  = df["high"].astype(float)
+        df["low"]   = df["low"].astype(float)
+        df["close"] = df["close"].astype(float)
+        df = df.sort_values("time").reset_index(drop=True)
+        return df
+    except Exception as e:
+        print(f"Twelve Data error {symbol} {interval}: {e}")
+        return None
 
+# ════════════════════════════════════════════════
+# جلب البيانات من Yahoo Finance
+# ════════════════════════════════════════════════
+def get_data_yahoo(symbol, interval):
+    try:
+        interval_map = {"5min":"5m","15min":"15m","30min":"30m","1h":"60m","4h":"1h"}
+        period_map   = {"5min":"1d","15min":"5d","30min":"5d","1h":"10d","4h":"60d"}
+        yf_interval  = interval_map.get(interval, "5m")
+        period       = period_map.get(interval, "5d")
+        url = f"https://query1.finance.yahoo.com/v8/finance/chart/{symbol}"
+        params  = {"interval": yf_interval, "range": period, "includePrePost": "false"}
+        headers = {"User-Agent": "Mozilla/5.0"}
+        r    = requests.get(url, params=params, headers=headers, timeout=15)
+        data = r.json()
+        result = data.get("chart", {}).get("result", None)
+        if not result:
+            return None
         timestamps = result[0].get("timestamp", None)
         if not timestamps:
             return None
-
         ohlc = result[0]["indicators"]["quote"][0]
         df = pd.DataFrame({
             "time":  pd.to_datetime(timestamps, unit="s"),
@@ -96,16 +128,14 @@ def get_data(symbol, interval, period="5d"):
             "low":   ohlc.get("low", []),
             "close": ohlc.get("close", []),
         }).dropna()
-
-        if len(df) < 10:
-            return None
-
-        return df
-
+        return df if len(df) >= 10 else None
     except Exception as e:
-        print(f"Data error {symbol} {interval}: {e}")
+        print(f"Yahoo error {symbol} {interval}: {e}")
         return None
 
+# ════════════════════════════════════════════════
+# مؤشر SK
+# ════════════════════════════════════════════════
 def pivot_high(high, left, right):
     result = [None] * len(high)
     for i in range(left, len(high) - right):
@@ -189,26 +219,32 @@ def sk_indicator(df, sensitivity):
 
     return buy_signals, sell_signals
 
-def check_symbol(yahoo_sym, name, interval, sensitivity):
-    period_map = {"5m":"1d","15m":"5d","30m":"5d","1h":"10d","4h":"60d"}
-    period = period_map.get(interval, "5d")
-    df = get_data(yahoo_sym, interval, period)
+def check_symbol(symbol, name, interval, sensitivity, source):
+    if source == "twelve":
+        df = get_data_twelve(symbol, interval)
+    else:
+        df = get_data_yahoo(symbol, interval)
+
     if df is None or len(df) < sensitivity * 3:
         print(f"No data: {name} {interval}")
         return
+
     buy_sigs, sell_sigs = sk_indicator(df, sensitivity)
     idx = len(df) - 2
     if idx < 0:
         return
+
     key      = f"{name}_{interval}"
     cur_time = str(df["time"].iloc[idx])
     price    = round(df["close"].iloc[idx], 5)
+
     if buy_sigs[idx]:
         sig_key = f"{key}_BUY_{cur_time}"
         if last_signal.get(key) != sig_key:
             last_signal[key] = sig_key
             send_telegram(f"🟢 <b>شراء | {name}</b>\n⏱ الفريم: {interval}\n💰 السعر: {price}\n🕐 الوقت: {cur_time}\n📊 مؤشر SK Fibonacci")
             print(f"BUY: {name} {interval} @ {price}")
+
     if sell_sigs[idx]:
         sig_key = f"{key}_SELL_{cur_time}"
         if last_signal.get(key) != sig_key:
@@ -221,9 +257,9 @@ def main():
     print("SK Bot started...")
     while True:
         print(f"\n[{datetime.now().strftime('%H:%M:%S')}] Checking...")
-        for yahoo_sym, name, interval, sensitivity in SYMBOLS:
+        for symbol, name, interval, sensitivity, source in SYMBOLS:
             try:
-                check_symbol(yahoo_sym, name, interval, sensitivity)
+                check_symbol(symbol, name, interval, sensitivity, source)
                 time.sleep(2)
             except Exception as e:
                 print(f"Error {name} {interval}: {e}")
