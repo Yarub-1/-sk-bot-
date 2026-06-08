@@ -3,67 +3,61 @@ import pandas as pd
 import time
 from datetime import datetime
 
-BOT_TOKEN    = "8791976068:AAG9M46lLkox7o5O2qzOVPRz0H0go01ZYeM"
-CHAT_ID      = "1853838900"
-TWELVE_KEY   = "04141b201ee547f8b2ba600cbcc287b5"
+BOT_TOKEN  = "8791976068:AAG9M46lLkox7o5O2qzOVPRz0H0go01ZYeM"
+CHAT_ID    = "1853838900"
+TWELVE_KEY = "04141b201ee547f8b2ba600cbcc287b5"
 
-# المصدر: "twelve" للذهب والفوركس والبيتكوين، "yahoo" للباقي
-SYMBOLS = [
-    # الذهب - Twelve Data
-    ("XAU/USD",  "XAUUSD",  "5min",  8,  "twelve"),
-    ("XAU/USD",  "XAUUSD",  "15min", 11, "twelve"),
-    ("XAU/USD",  "XAUUSD",  "30min", 12, "twelve"),
-    ("XAU/USD",  "XAUUSD",  "1h",    14, "twelve"),
-    ("XAU/USD",  "XAUUSD",  "4h",    10, "twelve"),
-    # الناسداك - Yahoo
-    ("NQ=F",     "NAS100",  "5min",  9,  "yahoo"),
-    ("NQ=F",     "NAS100",  "15min", 12, "yahoo"),
-    ("NQ=F",     "NAS100",  "30min", 14, "yahoo"),
-    ("NQ=F",     "NAS100",  "1h",    15, "yahoo"),
-    # الفضة - Yahoo
-    ("XAGUSD=X", "XAGUSD",  "5min",  11, "yahoo"),
-    ("XAGUSD=X", "XAGUSD",  "15min", 14, "yahoo"),
-    ("XAGUSD=X", "XAGUSD",  "30min", 16, "yahoo"),
-    ("XAGUSD=X", "XAGUSD",  "1h",    18, "yahoo"),
-    # US500 - Yahoo
-    ("ES=F",     "US500",   "5min",  8,  "yahoo"),
-    ("ES=F",     "US500",   "15min", 11, "yahoo"),
-    ("ES=F",     "US500",   "30min", 13, "yahoo"),
-    ("ES=F",     "US500",   "1h",    14, "yahoo"),
-    # القهوة - Yahoo
-    ("KC=F",     "COFFEE",  "5min",  12, "yahoo"),
-    ("KC=F",     "COFFEE",  "15min", 15, "yahoo"),
-    ("KC=F",     "COFFEE",  "30min", 18, "yahoo"),
-    ("KC=F",     "COFFEE",  "1h",    20, "yahoo"),
-    # GBPUSD - Twelve Data
-    ("GBP/USD",  "GBPUSD",  "5min",  8,  "twelve"),
-    ("GBP/USD",  "GBPUSD",  "15min", 10, "twelve"),
-    ("GBP/USD",  "GBPUSD",  "30min", 11, "twelve"),
-    ("GBP/USD",  "GBPUSD",  "1h",    14, "twelve"),
-    ("GBP/USD",  "GBPUSD",  "4h",    10, "twelve"),
-    # النفط - Yahoo
-    ("CL=F",     "USOIL",   "5min",  9,  "yahoo"),
-    ("CL=F",     "USOIL",   "15min", 12, "yahoo"),
-    ("CL=F",     "USOIL",   "30min", 13, "yahoo"),
-    ("CL=F",     "USOIL",   "1h",    16, "yahoo"),
-    # البيتكوين - Twelve Data
-    ("BTC/USD",  "BTCUSDT", "5min",  9,  "twelve"),
-    ("BTC/USD",  "BTCUSDT", "15min", 12, "twelve"),
-    ("BTC/USD",  "BTCUSDT", "30min", 14, "twelve"),
-    ("BTC/USD",  "BTCUSDT", "1h",    16, "twelve"),
-    ("BTC/USD",  "BTCUSDT", "4h",    11, "twelve"),
-    # EURUSD - Twelve Data
-    ("EUR/USD",  "EURUSD",  "5min",  9,  "twelve"),
-    ("EUR/USD",  "EURUSD",  "15min", 12, "twelve"),
-    ("EUR/USD",  "EURUSD",  "30min", 13, "twelve"),
-    ("EUR/USD",  "EURUSD",  "1h",    15, "twelve"),
-    ("EUR/USD",  "EURUSD",  "4h",    10, "twelve"),
-    # GBPJPY - Twelve Data
-    ("GBP/JPY",  "GBPJPY",  "5min",  10, "twelve"),
-    ("GBP/JPY",  "GBPJPY",  "15min", 12, "twelve"),
-    ("GBP/JPY",  "GBPJPY",  "30min", 14, "twelve"),
-    ("GBP/JPY",  "GBPJPY",  "1h",    16, "twelve"),
-    ("GBP/JPY",  "GBPJPY",  "4h",    11, "twelve"),
+# الرموز التي تستخدم Twelve Data (فوركس + ذهب + بيتكوين)
+TWELVE_SYMBOLS = [
+    ("XAU/USD", "XAUUSD",  "5min",  8),
+    ("XAU/USD", "XAUUSD",  "15min", 11),
+    ("XAU/USD", "XAUUSD",  "30min", 12),
+    ("XAU/USD", "XAUUSD",  "1h",    14),
+    ("XAU/USD", "XAUUSD",  "4h",    10),
+    ("GBP/USD", "GBPUSD",  "5min",  8),
+    ("GBP/USD", "GBPUSD",  "15min", 10),
+    ("GBP/USD", "GBPUSD",  "30min", 11),
+    ("GBP/USD", "GBPUSD",  "1h",    14),
+    ("GBP/USD", "GBPUSD",  "4h",    10),
+    ("EUR/USD", "EURUSD",  "5min",  9),
+    ("EUR/USD", "EURUSD",  "15min", 12),
+    ("EUR/USD", "EURUSD",  "30min", 13),
+    ("EUR/USD", "EURUSD",  "1h",    15),
+    ("EUR/USD", "EURUSD",  "4h",    10),
+    ("GBP/JPY", "GBPJPY",  "5min",  10),
+    ("GBP/JPY", "GBPJPY",  "15min", 12),
+    ("GBP/JPY", "GBPJPY",  "30min", 14),
+    ("GBP/JPY", "GBPJPY",  "1h",    16),
+    ("GBP/JPY", "GBPJPY",  "4h",    11),
+    ("BTC/USD", "BTCUSDT", "5min",  9),
+    ("BTC/USD", "BTCUSDT", "15min", 12),
+    ("BTC/USD", "BTCUSDT", "30min", 14),
+    ("BTC/USD", "BTCUSDT", "1h",    16),
+    ("BTC/USD", "BTCUSDT", "4h",    11),
+]
+
+# الرموز التي تستخدم Yahoo Finance
+YAHOO_SYMBOLS = [
+    ("NQ=F",     "NAS100", "5min",  9),
+    ("NQ=F",     "NAS100", "15min", 12),
+    ("NQ=F",     "NAS100", "30min", 14),
+    ("NQ=F",     "NAS100", "1h",    15),
+    ("XAGUSD=X", "XAGUSD", "5min",  11),
+    ("XAGUSD=X", "XAGUSD", "15min", 14),
+    ("XAGUSD=X", "XAGUSD", "30min", 16),
+    ("XAGUSD=X", "XAGUSD", "1h",    18),
+    ("ES=F",     "US500",  "5min",  8),
+    ("ES=F",     "US500",  "15min", 11),
+    ("ES=F",     "US500",  "30min", 13),
+    ("ES=F",     "US500",  "1h",    14),
+    ("KC=F",     "COFFEE", "5min",  12),
+    ("KC=F",     "COFFEE", "15min", 15),
+    ("KC=F",     "COFFEE", "30min", 18),
+    ("KC=F",     "COFFEE", "1h",    20),
+    ("CL=F",     "USOIL",  "5min",  9),
+    ("CL=F",     "USOIL",  "15min", 12),
+    ("CL=F",     "USOIL",  "30min", 13),
+    ("CL=F",     "USOIL",  "1h",    16),
 ]
 
 last_signal = {}
@@ -217,8 +211,7 @@ def sk_indicator(df, sensitivity):
 
     return buy_signals, sell_signals
 
-def check_symbol(symbol, name, interval, sensitivity, source):
-    df = get_data_twelve(symbol, interval) if source == "twelve" else get_data_yahoo(symbol, interval)
+def process_signal(df, name, interval, sensitivity):
     if df is None or len(df) < sensitivity * 3:
         print(f"No data: {name} {interval}")
         return
@@ -245,16 +238,32 @@ def check_symbol(symbol, name, interval, sensitivity, source):
 def main():
     send_telegram("🤖 <b>SK Trading Bot</b> يعمل الآن ✅\nيراقب جميع الرموز والفريمات...")
     print("SK Bot started...")
+
     while True:
-        print(f"\n[{datetime.now().strftime('%H:%M:%S')}] Checking...")
-        for symbol, name, interval, sensitivity, source in SYMBOLS:
+        print(f"\n[{datetime.now().strftime('%H:%M:%S')}] Checking Twelve Data symbols...")
+
+        # Twelve Data — 8 طلبات في الدقيقة = ننتظر 8 ثواني بين كل طلب
+        for symbol, name, interval, sensitivity in TWELVE_SYMBOLS:
             try:
-                check_symbol(symbol, name, interval, sensitivity, source)
+                df = get_data_twelve(symbol, interval)
+                process_signal(df, name, interval, sensitivity)
+                time.sleep(8)  # 8 ثواني لضمان عدم تجاوز الحد
+            except Exception as e:
+                print(f"Error {name} {interval}: {e}")
+
+        print(f"\n[{datetime.now().strftime('%H:%M:%S')}] Checking Yahoo symbols...")
+
+        # Yahoo Finance — بدون حد
+        for symbol, name, interval, sensitivity in YAHOO_SYMBOLS:
+            try:
+                df = get_data_yahoo(symbol, interval)
+                process_signal(df, name, interval, sensitivity)
                 time.sleep(2)
             except Exception as e:
                 print(f"Error {name} {interval}: {e}")
-        print("Waiting 60 seconds...")
-        time.sleep(60)
+
+        print("Waiting 5 minutes...")
+        time.sleep(300)  # ننتظر 5 دقائق بين كل دورة
 
 if __name__ == "__main__":
     main()
